@@ -1,6 +1,6 @@
 #pragma once
 
-#include "NeuralNetwork.h"
+#include "Algorithm.h"
 #include "TextureManager.h"
 
 class Agent

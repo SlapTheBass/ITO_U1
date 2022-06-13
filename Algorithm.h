@@ -1,9 +1,8 @@
 #pragma once
-class Obstacle
+class Algorithm
 {
 public:
 
 private:
-
 };
 

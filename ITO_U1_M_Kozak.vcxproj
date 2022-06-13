@@ -146,7 +146,7 @@
     <ClCompile Include="App.cpp" />
     <ClCompile Include="Level.cpp" />
     <ClCompile Include="main.cpp" />
-    <ClCompile Include="NeuralNetwork.cpp" />
+    <ClCompile Include="Algorithm.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="SoundManager.cpp" />
     <ClCompile Include="TextureManager.cpp" />
@@ -159,7 +159,7 @@
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="TextureManager.h" />
     <ClInclude Include="Utilities.h" />
-    <ClInclude Include="NeuralNetwork.h" />
+    <ClInclude Include="Algorithm.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
