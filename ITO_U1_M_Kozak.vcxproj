@@ -155,6 +155,7 @@
     <ClInclude Include="Agent.h" />
     <ClInclude Include="App.h" />
     <ClInclude Include="Level.h" />
+    <ClInclude Include="PCH.h" />
     <ClInclude Include="Obstacle.h" />
     <ClInclude Include="SoundManager.h" />
     <ClInclude Include="TextureManager.h" />
