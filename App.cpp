@@ -1,8 +1,9 @@
 #include "App.h"
 
-App::App()
+App::App(sf::RenderWindow& window)
 {
 	keys = INPUT::NONE;
+	level = std::make_unique<Level>(window);
 }
 
 App::~App()
@@ -11,6 +12,24 @@ App::~App()
 
 void App::Init()
 {
+}
+void App::Run(sf::RenderWindow& window)
+{
+	while (window.isOpen())
+	{
+		if (mapKeys(keyboard) == INPUT::QUIT)
+		{
+			state = APP_STATE::CLOSE;
+			window.close();
+			break;
+		}
+
+		window.clear();
+
+		Draw(window);
+
+		window.display();
+	}
 }
 
 INPUT App::mapKeys(sf::Keyboard& keyboard)
@@ -58,4 +77,9 @@ void App::TakeInput(INPUT& keys)
 	default:
 		break;
 	}
+}
+
+void App::Draw(sf::RenderWindow& window)
+{
+	level->drawLevel(window);
 }
