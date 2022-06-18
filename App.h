@@ -9,21 +9,25 @@
 class App
 {
 public:
-	App();
+	App(sf::RenderWindow& window);
 	void Init();
-	void Run();
+	void Run(sf::RenderWindow& window);
 	int  Close();
 
 private:
-	sf::Window mainWindow;
-	sf::Keyboard keyboard;
-	Agent agent;
-	Level level;
-	Algorithm algorithm;
-	INPUT keys = INPUT::NONE;
+	sf::Keyboard            keyboard;
+	Agent                   agent;
+	std::unique_ptr<Level>  level;
+	Algorithm               algorithm;
+
+	INPUT        keys = INPUT::NONE;
+	APP_STATE    state = APP_STATE::ONINIT;
 
 	~App();
-	void TakeInput(INPUT &keys);
+	void MoveAgent();
+	void Update();
+	void Draw(sf::RenderWindow& widnow);
+	void TakeInput(INPUT& keys);
 	INPUT mapKeys(sf::Keyboard &keyboard);
 };
 
