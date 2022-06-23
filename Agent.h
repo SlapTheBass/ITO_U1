@@ -1,7 +1,7 @@
 #pragma once
 
 #include "PCH.h" 
-#include "TextureManager.h"
+#include "Level.h"
 
 class Agent
 {
@@ -10,6 +10,10 @@ public:
 	~Agent();
 
 	void move();
+
+	void Draw(sf::RenderWindow& window);
+
+	void Spawn(Level& level, sf::Clock* timer);
 
 	sf::Sprite getSprite();
 

@@ -4,6 +4,7 @@
 #include "Agent.h"
 #include "Level.h"
 #include "Algorithm.h"
+#include "UserInterface.h"
 
 
 class App
@@ -15,19 +16,23 @@ public:
 	int  Close();
 
 private:
-	sf::Keyboard            keyboard;
-	Agent                   agent;
-	std::unique_ptr<Level>  level;
-	Algorithm               algorithm;
+	sf::Keyboard keyboard;
+	sf::Clock    timer;
+	sf::Sprite	 aim;
+	sf::Texture  aim_tex;
+	Algorithm    algorithm;
 
 	INPUT        keys = INPUT::NONE;
 	APP_STATE    state = APP_STATE::ONINIT;
 
+	std::unique_ptr<UserInterface> UI;
+	std::unique_ptr<Level> level;
+	std::unique_ptr<Agent> agent;
+
 	~App();
-	void MoveAgent();
-	void Update();
+	void MoveAgent(ACTION action);
+	void Update(sf::RenderWindow& window);
 	void Draw(sf::RenderWindow& widnow);
-	void TakeInput(INPUT& keys);
 	INPUT mapKeys(sf::Keyboard &keyboard);
 };
 
