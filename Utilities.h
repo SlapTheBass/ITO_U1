@@ -1,8 +1,8 @@
 #pragma once
 
-enum class DIRECTION {NORTH, SOUTH, EAST, WEST};
+enum class ACTION {NORTH, SOUTH, EAST, WEST};
 
-enum class TILE_TYPE {EMPTY, PLAYER, OBSTACLE, EXIT};
+enum class TILE_TYPE {EMPTY, AGENT, OBSTACLE, EXIT};
 
 enum class APP_STATE {ONINIT, START, CLOSE};
 

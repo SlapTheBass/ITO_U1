@@ -2,8 +2,20 @@
 
 App::App(sf::RenderWindow& window)
 {
+	aim_tex.loadFromFile("UTILS/aim.png");
+	aim.setTexture(aim_tex);
+
 	keys = INPUT::NONE;
-	level = std::make_unique<Level>(window);
+
+	level = std::make_unique<Level>();
+
+	agent = std::make_unique<Agent>();
+	agent->Spawn(*level, &timer);
+
+	timer.restart();
+
+	UI = std::make_unique<UserInterface>(*level, *agent, sf::Vector2i(0,0), window);
+
 }
 
 App::~App()
@@ -13,6 +25,15 @@ App::~App()
 void App::Init()
 {
 }
+
+void App::Update(sf::RenderWindow& window)
+{
+	sf::Vector2i mousePos = sf::Mouse::getPosition();
+	aim.setPosition((float)mousePos.x, (float)mousePos.y);
+
+	UI->Update(*level, *agent, mousePos, window);
+}
+
 void App::Run(sf::RenderWindow& window)
 {
 	while (window.isOpen())
@@ -24,7 +45,36 @@ void App::Run(sf::RenderWindow& window)
 			break;
 		}
 
+		if (mapKeys(keyboard) == INPUT::INC_SIZE)
+		{
+			level->reset(window);
+			level->incSize(&timer);
+			agent->Spawn(*level, &timer);
+			timer.restart();
+			algorithm.calculaRewards(*level);
+		}
+
+		if (mapKeys(keyboard) == INPUT::DEC_SIZE)
+		{
+			level->reset(window);
+			level->decSize(&timer);
+			agent->Spawn(*level, &timer);
+			timer.restart();
+			algorithm.calculaRewards(*level);
+		}
+
+		if (mapKeys(keyboard) == INPUT::RESET)
+		{
+			level->reset(window);
+			level->keepSize(&timer);
+			agent->Spawn(*level, &timer);
+			timer.restart();
+			algorithm.calculaRewards(*level);
+		}
+
 		window.clear();
+
+		Update(window);
 
 		Draw(window);
 
@@ -58,28 +108,10 @@ INPUT App::mapKeys(sf::Keyboard& keyboard)
 	return keys;
 }
 
-void App::TakeInput(INPUT& keys)
-{
-	switch (keys)
-	{
-	case INPUT::INC_SIZE:
-		break;
-
-	case INPUT::DEC_SIZE:
-		break;
-
-	case INPUT::RESET:
-		break;
-
-	case INPUT::QUIT:
-		break;
-
-	default:
-		break;
-	}
-}
-
 void App::Draw(sf::RenderWindow& window)
 {
 	level->drawLevel(window);
+	UI->Draw(window);
+	agent->Draw(window);
+	window.draw(aim);
 }
