@@ -51,7 +51,6 @@ void App::Run(sf::RenderWindow& window)
 			level->incSize(&timer);
 			agent->Spawn(*level, &timer);
 			timer.restart();
-			algorithm.calculaRewards(*level);
 		}
 
 		if (mapKeys(keyboard) == INPUT::DEC_SIZE)
@@ -60,16 +59,12 @@ void App::Run(sf::RenderWindow& window)
 			level->decSize(&timer);
 			agent->Spawn(*level, &timer);
 			timer.restart();
-			algorithm.calculaRewards(*level);
 		}
 
 		if (mapKeys(keyboard) == INPUT::RESET)
 		{
-			level->reset(window);
 			level->keepSize(&timer);
-			agent->Spawn(*level, &timer);
 			timer.restart();
-			algorithm.calculaRewards(*level);
 		}
 
 		window.clear();

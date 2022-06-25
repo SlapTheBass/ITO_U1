@@ -30,7 +30,10 @@ void Agent::Spawn(Level& level, sf::Clock* timer)
 			row = rand() % (level.getLevelSize() - 1);
 		}
 
+		level.setStartTile(sf::Vector2i(col, row));
 		level.setAgentPos(sf::Vector2i(col, row));
+		x = col;
+		y = row;
 		p_sprite.setPosition((100.f * col) + 50, (100.f * row) + 40);
 	}
 }
@@ -38,4 +41,42 @@ void Agent::Spawn(Level& level, sf::Clock* timer)
 sf::Sprite Agent::getSprite()
 {
 	return p_sprite;
+}
+
+void Agent::move(Level& level)
+{
+	p_sprite.setPosition((100.f * level.getAgent().x) + 50, (100.f * level.getAgent().y) + 40);
+
+	ACTION vec = level.getSequence();
+
+
+	if (vec == ACTION::EAST)
+	{
+		x = x - 1;
+		y = y;
+		level.setAgentPos(sf::Vector2i(x, y));
+		p_sprite.setPosition((100.f * x) + 50, (100.f * y) + 40);
+	}
+	else if (vec == ACTION::WEST)
+	{
+		x = x + 1;
+		y = y;
+		level.setAgentPos(sf::Vector2i(x, y));
+		p_sprite.setPosition((100.f * x) + 50, (100.f * y) + 40);
+	}
+	else if (vec == ACTION::NORTH)
+	{
+		x = x;
+		y = y + 1;
+		level.setAgentPos(sf::Vector2i(x, y));
+		p_sprite.setPosition((100.f * x) + 50, (100.f * y) + 40);
+	}
+	else
+	{
+		x = x;
+		y = y - 1;
+		level.setAgentPos(sf::Vector2i(x, y));
+		p_sprite.setPosition((100.f * x) + 50, (100.f * y) + 40);
+	}
+
 }

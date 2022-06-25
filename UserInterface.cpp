@@ -7,20 +7,20 @@ UserInterface::UserInterface(Level& level, Agent& agent, sf::Vector2i position, 
 	font.loadFromFile("UTILS/font.ttf");
 	
 	keys.setFont(font);
-	keys.setString("[ESC] - Close application\n\n\n[Left Shift] - increase level size\n\n\n[Left Ctrl] - decrease level size\n\n\n[R] - reset");
+	keys.setString("[ESC] - Close application\n\n\n[Left Shift] - increase level size\n\n\n[Left Ctrl] - decrease level size\n\n\n[R] - reset\n\n\nHold [SPACE] - Agent seeks for exit");
 	keys.setPosition(sf::Vector2f(1200, 50));
 	keys.setFillColor(sf::Color::White);
 	keys.setCharacterSize(22);
 
 	size.setFont(font);
 	size.setString("Level size:  " + std::to_string(level_size) + " x " + std::to_string(level_size));
-	size.setPosition(sf::Vector2f(1200, 350));
+	size.setPosition(sf::Vector2f(1200, 400));
 	size.setFillColor(sf::Color::Yellow);
 	size.setCharacterSize(22);
 
 	obstacles.setFont(font);
 	obstacles.setString("Number of obstacles: " + std::to_string(obstacles_number));
-	obstacles.setPosition(sf::Vector2f(1200, 400));
+	obstacles.setPosition(sf::Vector2f(1200, 450));
 	obstacles.setFillColor(sf::Color::Yellow);
 	obstacles.setCharacterSize(22);
 
@@ -61,7 +61,6 @@ void UserInterface::Update(Level& level, Agent& agent, sf::Vector2i position, sf
 
 	column_index = level.GetTile(position, window)->columnIndex;
 	row_index = level.GetTile(position, window)->rowIndex;
-	std::cout << level.GetTile(position, window)->reward << "\n\n";
 	average_reward = level.GetTile(position, window)->reward;
 	discount = 0.9;
 
