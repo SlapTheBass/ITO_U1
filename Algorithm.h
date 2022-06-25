@@ -9,9 +9,10 @@ public:
 	Algorithm();
 	~Algorithm();
 
-	void calculaRewards(Level& level);
+	void calculateRewards(Level& level);
+	void FindR(std::vector<Tile> vec, Level& level);
 
 private:
-	std::vector<Tile*> exits;
+	std::vector<Tile**> grids;
 };
 

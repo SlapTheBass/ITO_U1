@@ -2,7 +2,7 @@
 
 Level::Level()
 {
-	GRID_SIZE = MIN_SIZE;
+	GRID_SIZE = MIN_SIZE + 1;
 	
 	initTiles();
 
@@ -141,15 +141,27 @@ void Level::decSize(sf::Clock* timer)
 	}	
 }
 
+void Level::RunAlgorithm(sf::Clock* timer)
+{
+	if (timer->getElapsedTime().asMilliseconds() >= 50)
+	{
+		seekPath();
+	}
+}
+
+void Level::StopAlgorithm(sf::Clock* timer)
+{
+	if (timer->getElapsedTime().asMilliseconds() >= 50)
+	{
+		run = false;			
+	}
+}
+
 void Level::keepSize(sf::Clock* timer)
 {
 	if (timer->getElapsedTime().asMilliseconds() >= 50)
 	{
-		GRID_SIZE = GRID_SIZE;
-
-		obstacles.clear();
-		generateExits();
-		generateObstacles();
+		setAgentPos(sf::Vector2i(start_x, start_y));
 	}
 }
 
@@ -158,7 +170,9 @@ void Level::drawLevel(sf::RenderWindow& window)
 	reset(window);
 
 	checkExits();
+	std::cout << "EXITS: " << exits.size() << "\n\n";
 	checkObstacles();
+	std::cout << "OBSTACLES:  " << obstacles.size() << "\n\n";
 
 	for (int i = 0; i < GRID_SIZE; i++)
 	{
@@ -199,6 +213,13 @@ void Level::drawLevel(sf::RenderWindow& window)
 			}
 		}
 	}
+
+
+	calculateRewards();
+
+	if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
+		seekPath();
+	
 }
 
 int Level::getLevelSize()
@@ -213,6 +234,7 @@ int Level::getObstaclesNumber()
 
 void Level::checkExits()
 {
+	exits.clear();
 	for (int i = 0; i < GRID_SIZE; ++i)
 	{
 		for (int j = 0; j < GRID_SIZE; ++j)
@@ -222,24 +244,31 @@ void Level::checkExits()
 			{
 				cell->type = TILE_TYPE::EXIT;
 				cell->reward = 1;
+				exits.emplace_back(cell);
 			}
 			else if ((i == SOUTH_x) && (j == SOUTH_y))
 			{
 				cell->type = TILE_TYPE::EXIT;
 				cell->reward = 1;
+				exits.emplace_back(cell);
 			}
 			else if ((i == EAST_x) && (j == EAST_y))
 			{
 				cell->type = TILE_TYPE::EXIT;
 				cell->reward = 1;
+				exits.emplace_back(cell);
 			}
 			else if ((i == WEST_x) && (j == WEST_y))
 			{
 				cell->type = TILE_TYPE::EXIT;
 				cell->reward = 1;
+				exits.emplace_back(cell);
 			}		
 			else
+			{
 				cell->type = TILE_TYPE::EMPTY;
+				cell->reward = 0;
+			}
 		}
 	}
 }
@@ -254,7 +283,7 @@ void Level::checkObstacles()
 
 			for (auto tile : obstacles)
 			{
-				if (tile.columnIndex == cell->columnIndex && tile.rowIndex == cell->rowIndex)
+				if (tile->columnIndex == cell->columnIndex && tile->rowIndex == cell->rowIndex)
 				{
 					if (cell->type == TILE_TYPE::EMPTY || cell->type == TILE_TYPE::OBSTACLE)
 					{
@@ -262,7 +291,10 @@ void Level::checkObstacles()
 						cell->type = TILE_TYPE::OBSTACLE;
 					}
 					else
+					{
 						obstacles.pop_back();
+						cell->reward = 0;
+					}
 				}
 			}
 		}
@@ -287,7 +319,7 @@ void Level::generateObstacles()
 					GRID[col][row-1].type == TILE_TYPE::EMPTY && (col != 0 && col != GRID_SIZE - 1 && row != 0 && row != GRID_SIZE -1 ))
 				{
 					GRID[col][row].type = TILE_TYPE::OBSTACLE;
-					obstacles.emplace_back(GRID[col][row]);
+					obstacles.emplace_back(&GRID[col][row]);
 				}
 			}
 		}
@@ -315,3 +347,298 @@ void Level::setAgentPos(sf::Vector2i pos)
 	agent_y = pos.y;
 }
 
+
+void Level::FindR()
+{
+	grids.clear();
+	int index = 0;
+
+	std::vector<Tile*> vec(exits);
+	vec.insert(vec.end(), obstacles.begin(), obstacles.end());
+
+	for (auto object : vec)
+	{
+		Tile subGRID[10][10];
+		//SUBGRID init
+
+		for (int i = 0; i < MAX_SIZE; ++i)
+		{
+			for (int j = 0; j < MAX_SIZE; ++j)
+			{
+				subGRID[i][j].columnIndex = i;
+				subGRID[i][j].rowIndex = j;
+			}
+		}
+
+		for (int i = 0; i < GRID_SIZE; ++i)
+		{
+			for (int j = 0; j < GRID_SIZE; ++j)
+			{
+				if (object->columnIndex == i && object->rowIndex == j)
+				{
+					subGRID[i][j].type = object->type;
+					subGRID[i][j].reward = object->reward;
+				}
+				else
+				{
+					subGRID[i][j].type == TILE_TYPE::EMPTY;
+				}
+			}
+		}
+
+		float temp;
+
+		for (int i = object->columnIndex; i < agent_x; ++i)
+		{
+			if (object->columnIndex == i)
+			{
+				subGRID[i][object->rowIndex].reward = object->reward;
+				temp = object->reward;
+			}
+			else
+			{
+				subGRID[i][object->rowIndex].reward = temp * 0.9;
+				temp = subGRID[i][object->rowIndex].reward;
+			}
+		}
+
+		for (int i = object->columnIndex; i >= agent_x; --i)
+		{
+			if (object->columnIndex == i)
+			{
+				subGRID[i][object->rowIndex].reward = object->reward;
+				temp = object->reward;
+			}
+			else
+			{
+				subGRID[i][object->rowIndex].reward = temp * 0.9;
+				temp = subGRID[i][object->rowIndex].reward;
+			}
+		}
+
+		for (int i = 0; i <= agent_x; ++i)
+		{
+			for (int j = object->rowIndex + 1; j <= agent_y; ++j)
+			{
+				subGRID[i][j].reward =(subGRID[i][j - 1].reward * 0.9) - 0.04;
+			}
+		}
+
+		for (int i = GRID_SIZE - 1; i >= agent_x; --i)
+		{
+			for (int j = object->rowIndex - 1; j >= agent_y; --j)
+			{
+				subGRID[i][j].reward =(subGRID[i][j+1].reward * 1.111);
+			}
+		}
+		
+		for (int i = 0; i < GRID_SIZE; ++i)
+		{
+			for (int j = 0; j < GRID_SIZE; ++j)
+			{
+				auto data = std::make_tuple(index, sf::Vector2i(i, j), subGRID[i][j].reward);
+				grids.push_back(data);
+			}
+		}
+		index++;
+	}
+
+	iterations = index;
+	vec.clear();
+}
+
+void Level::calculateRewards()
+{
+	float temp = 0;
+
+	FindR();
+
+	for (auto element : grids)
+	{
+		for (int i = 0; i < GRID_SIZE; ++i)
+		{
+			for (int j = 0; j < GRID_SIZE; ++j)
+			{
+				if (std::get<1>(element).x == i && std::get<1>(element).y == j)
+				{
+					if (GRID[i][j].type == TILE_TYPE::EXIT)
+					{
+						GRID[i][j].reward = 1;
+					}
+					else if (GRID[i][j].type == TILE_TYPE::OBSTACLE)
+					{
+						GRID[i][j].reward = -1;
+					}
+					else
+					{
+						GRID[i][j].reward += std::get<2>(element);
+					}
+				}
+			}
+		}
+	}
+
+	for (int i = 0; i < GRID_SIZE; ++i)
+	{
+		for (int j = 0; j < GRID_SIZE; ++j)
+		{
+			if (GRID[i][j].type == TILE_TYPE::EMPTY)
+			{
+				GRID[i][j].reward = (GRID[i][j].reward / iterations);
+			}
+			else if (GRID[i][j].type == TILE_TYPE::AGENT)
+			{
+				GRID[i][j].reward = 0;
+			}
+		}
+	}
+
+}
+
+void Level::seekPath()
+{
+	Tile *EAST, *WEST, *NORTH, *SOUTH;
+	EAST = &GRID[agent_x - 1][agent_y];
+	WEST = &GRID[agent_x + 1][agent_y];
+	NORTH = &GRID[agent_x][agent_y - 1];
+	SOUTH = &GRID[agent_x][agent_y + 1];
+
+	float horizontal = (EAST->reward > WEST->reward ? EAST->reward : WEST->reward);
+	float vertical = (NORTH->reward > SOUTH->reward ? NORTH->reward : SOUTH->reward);
+
+	if (horizontal > vertical)
+	{
+		if (EAST->reward > WEST->reward)
+		{
+			if (EAST->type == TILE_TYPE::EXIT)
+			{
+				gain += 1;
+				EAST->reward += gain;
+				agent_x = EAST->columnIndex;
+				agent_y = EAST->rowIndex;
+				path = ACTION::EAST;
+			}
+			else if (EAST->type == TILE_TYPE::EMPTY)
+			{
+				gain += 0.01;
+				EAST->reward += gain;
+				agent_x = EAST->columnIndex;
+				agent_y = EAST->rowIndex;
+				path = ACTION::EAST;
+			}
+			else
+			{
+				gain -= 1;
+				EAST->reward += gain;
+				agent_x = EAST->columnIndex;
+				agent_y = EAST->rowIndex;
+				path = ACTION::EAST;
+			}
+		}
+		else
+		{
+			if (WEST->type == TILE_TYPE::EXIT)
+			{
+				gain += 1;
+				WEST->reward += gain;
+				agent_x = WEST->columnIndex;
+				agent_y = WEST->rowIndex;
+				path = ACTION::WEST;
+			}
+			else if (WEST->type == TILE_TYPE::EMPTY)
+			{
+				gain += 0.01;
+				WEST->reward += gain;
+				agent_x = WEST->columnIndex;
+				agent_y = WEST->rowIndex;
+				path = ACTION::WEST;
+			}
+			else
+			{
+				gain -= 1;
+				WEST->reward += gain;
+				agent_x = WEST->columnIndex;
+				agent_y = WEST->rowIndex;
+				path = ACTION::WEST;
+			}
+		}
+	}
+	else
+	{
+		if (NORTH->reward > SOUTH->reward)
+		{
+			if (NORTH->type == TILE_TYPE::EXIT)
+			{
+				gain += 1;
+				NORTH->reward += gain;
+				agent_x = NORTH->columnIndex;
+				agent_y = NORTH->rowIndex;
+				path = ACTION::NORTH;
+			}
+			else if (NORTH->type == TILE_TYPE::EMPTY)
+			{
+				gain += 0.01;
+				NORTH->reward += gain;
+				agent_x = NORTH->columnIndex;
+				agent_y = NORTH->rowIndex;
+				path = ACTION::NORTH;
+			}
+			else
+			{
+				gain -= 1;
+				NORTH->reward += gain;
+				agent_x = NORTH->columnIndex;
+				agent_y = NORTH->rowIndex;
+				path = ACTION::NORTH;
+			}
+		}
+		else
+		{
+			if (SOUTH->type == TILE_TYPE::EXIT)
+			{
+				gain += 1;
+				SOUTH->reward += gain;
+				agent_x = SOUTH->columnIndex;
+				agent_y = SOUTH->rowIndex;
+				path = ACTION::SOUTH;
+			}
+			else if (SOUTH->type == TILE_TYPE::EMPTY)
+			{
+				gain += 0.01;
+				SOUTH->reward += gain;
+				agent_x = SOUTH->columnIndex;
+				agent_y = SOUTH->rowIndex;
+				path = ACTION::SOUTH;
+			}
+			else
+			{
+				gain -= 1;
+				SOUTH->reward += gain;
+				agent_x = SOUTH->columnIndex;
+				agent_y = SOUTH->rowIndex;
+				path = ACTION::SOUTH;
+			}
+		}
+	}
+}
+
+void Level::setStartTile(sf::Vector2i pos)
+{
+	start_x = pos.x;
+	start_y = pos.y;
+}
+
+float Level::getGain()
+{
+	return gain;
+}
+
+ACTION Level::getSequence()
+{
+	return path;
+}
+
+sf::Vector2i Level::getAgent()
+{
+	return sf::Vector2i(agent_x, agent_y);
+}

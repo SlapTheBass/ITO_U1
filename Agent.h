@@ -9,7 +9,7 @@ public:
 	Agent();
 	~Agent();
 
-	void move();
+	void move(Level& level);
 
 	void Draw(sf::RenderWindow& window);
 
@@ -20,5 +20,7 @@ public:
 private:
 	sf::Sprite  p_sprite;
 	sf::Texture p_texture;
+
+	int x, y;
 };
 
