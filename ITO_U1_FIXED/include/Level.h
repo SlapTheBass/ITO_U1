@@ -4,7 +4,8 @@
 
 struct Tile
 {
-	E_tileType  type = eEMPTY;
+	E_tileType   type = eEMPTY;
+	E_tileStatus status = eINACTIVE;
 	float       reward = 0.0f;
 	int         columnIndex = 0;
 	int         rowIndex = 0;
@@ -14,35 +15,29 @@ struct Tile
 class Level
 {
 public:
+	/* Default constructor */
 	Level();
+
+	/* Default destructor */
 	~Level();
 
+	/* Drawing level method
+	  @Param takes pointer to sf::Window
+	  @Returns void */
 	void drawLevel(sf::RenderWindow& window);
-
-	void generateExits();
-	void reset(sf::RenderWindow& window);
-	void checkExits();
-	void checkObstacles();
 
 	int getLevelSize();
 	int getObstaclesNumber();
 
-	Tile* GetTile(sf::Vector2i position, sf::RenderWindow& window);
-	Tile* getTile(int x, int y);
+	Tile* GetTile(sf::Vector2i position);
+	Tile* GetTile(int x, int y);
 
 	void setAgentPos(sf::Vector2i pos);
 
-	void calculateRewards();
-	void seekPath();
-
-	float getGain();
-
-	void RunAlgorithm(sf::Clock* timer);
-	void StopAlgorithm(sf::Clock* timer);
 
 	sf::Vector2i getAgent();
 
-	void setStartTile(sf::Vector2i pos);
+	
 
 	E_action getSequence();
 
@@ -72,8 +67,6 @@ private:
 	float gain = 0;
 	bool run = false;
 
-	void FindR();
-
 	void incSize(sf::Clock* timer);
 	void decSize(sf::Clock* timer);
 	void keepSize(sf::Clock* timer);
@@ -81,4 +74,11 @@ private:
 	void initTiles();
 
 	void generateObstacles();
+
+	void setStartTile(sf::Vector2i pos);
+
+	void generateExits();
+	void reset();
+	void checkExits();
+	void checkObstacles();
 };

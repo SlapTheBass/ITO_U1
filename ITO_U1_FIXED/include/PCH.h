@@ -12,7 +12,7 @@
 #include "Utils.h"
 
 
-/* DEBUG ONLY MACROS DEFINTIONS */
+/* DEBUG ONLY MACROS */
 #ifdef  _DEBUG
 
 #define DBG(x)  (std::cout << #x << " = " << x << std::endl);
