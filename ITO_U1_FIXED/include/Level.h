@@ -1,6 +1,7 @@
 #pragma once
 
 #include "PCH.h"
+#include "Input.h"
 
 struct Tile
 {
@@ -24,7 +25,9 @@ public:
 	/* Drawing level method
 	  @Param takes pointer to sf::Window
 	  @Returns void */
-	void drawLevel(sf::RenderWindow& window);
+	void drawLevel(sf::RenderWindow* window);
+
+	void Update(Input& input, sf::Clock* timer);
 
 	int getLevelSize();
 	int getObstaclesNumber();
@@ -69,6 +72,7 @@ private:
 
 	void incSize(sf::Clock* timer);
 	void decSize(sf::Clock* timer);
+	void reset();
 	void keepSize(sf::Clock* timer);
 
 	void initTiles();
@@ -78,7 +82,7 @@ private:
 	void setStartTile(sf::Vector2i pos);
 
 	void generateExits();
-	void reset();
+	
 	void checkExits();
 	void checkObstacles();
 };

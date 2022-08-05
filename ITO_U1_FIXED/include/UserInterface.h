@@ -7,11 +7,11 @@
 class UserInterface
 {
 public:
-	UserInterface(Level& level, Agent& agent, sf::Vector2i position, sf::RenderWindow& window);
+	UserInterface();
 	~UserInterface();
 
-	void Update(Level& level, Agent& agent, sf::Vector2i position, sf::RenderWindow& window);
-	void Draw(sf::RenderWindow& window);
+	void Update();
+	void Draw(sf::RenderWindow* window);
 
 private:
 	int level_size = 0;

@@ -1,11 +1,51 @@
 #include "UserInterface.h"
 
-UserInterface::UserInterface(Level& level, Agent& agent, sf::Vector2i position, sf::RenderWindow& window)
+UserInterface::UserInterface()
 {
+	font.loadFromFile("Utilities/font.ttf");
 
+	keys.setFont(font);
+	keys.setString("[ESC] - Close application\n\n\n[Left Shift] - increase level size\n\n\n[Left Ctrl] - decrease level size\n\n\n[R] - reset\n\n\nHold [SPACE] - Agent seeks for exit");
+	keys.setPosition(sf::Vector2f(750, 50));
+	keys.setFillColor(sf::Color::White);
+	keys.setCharacterSize(10);
+
+	size.setFont(font);
+	size.setString("Level size:  " + std::to_string(level_size) + " x " + std::to_string(level_size));
+	size.setPosition(sf::Vector2f(750, 240));
+	size.setFillColor(sf::Color::Yellow);
+	size.setCharacterSize(10);
+
+	obstacles.setFont(font);
+	obstacles.setString("Number of obstacles: " + std::to_string(obstacles_number));
+	obstacles.setPosition(sf::Vector2f(750, 255));
+	obstacles.setFillColor(sf::Color::Yellow);
+	obstacles.setCharacterSize(10);
+
+	info.setFont(font);
+	info.setString("================= TILE INFO ================\n\ncolumn index: " + std::to_string(column_index) + "\trow index: " + std::to_string(row_index)
+		+ "\n\naverage reward: " + std::to_string(average_reward) + "\n\ndiscount: " + std::to_string(discount));
+	info.setPosition(sf::Vector2f(750, 350));
+	info.setFillColor(sf::Color::Green);
+	info.setCharacterSize(10);
+
+	type.setFont(font);
+	type.setString("TILE TYPE:  ");
+	type.setPosition(sf::Vector2f(750, 500));
+	type.setFillColor(sf::Color::Magenta);
+	type.setCharacterSize(10);
 }
 
 UserInterface::~UserInterface()
 {
 
+}
+
+void UserInterface::Draw(sf::RenderWindow* window)
+{
+	window->draw(keys);
+	window->draw(size);
+	window->draw(obstacles);
+	window->draw(info);
+	window->draw(type);
 }

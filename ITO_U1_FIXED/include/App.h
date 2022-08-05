@@ -24,9 +24,9 @@ private:
 	Input       _input;
 	E_appState  _state = eONINIT;
 
-	std::unique_ptr<UserInterface> _UI;
-	std::unique_ptr<Level> _level;
-	std::unique_ptr<Agent> _agent;
+	UserInterface* _UI;
+	Level* _level;
+	Agent* _agent;
 
 	/*default destructor*/
 	~App();

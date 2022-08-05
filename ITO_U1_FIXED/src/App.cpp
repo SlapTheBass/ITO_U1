@@ -12,13 +12,16 @@ App::~App()
 
 void App::Init()
 {
-	_window = new sf::RenderWindow(sf::VideoMode(1024, 576), "RL Project"); //
+	_window = new sf::RenderWindow(sf::VideoMode(1024, 600), "RL Project"); 
 	_window->setKeyRepeatEnabled(true);
+
+	_level = new Level();
+	_UI = new UserInterface();
 }
 
 void App::Update()
 {
-
+	_level->Update(_input, &_timer);
 }
 
 void App::Run()
@@ -37,17 +40,18 @@ void App::Run()
 			}
 		}
 
+		_window->clear();
+
 		Update();
 
 		Draw();
-		
 	}
 }
 
 void App::Draw()
 {
-	_window->clear();
-
+	_UI->Draw(_window);
+	_level->drawLevel(_window);
 	_window->display();
 }
 

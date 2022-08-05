@@ -41,6 +41,16 @@
     <ClCompile Include="src\Obstacle.cpp" />
     <ClCompile Include="src\UserInterface.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Utilities\aim.png" />
+    <Image Include="Utilities\spr_agent.png" />
+    <Image Include="Utilities\spr_bush.png" />
+    <Image Include="Utilities\spr_exit.png" />
+    <Image Include="Utilities\spr_grass.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Utilities\font.TTF" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>

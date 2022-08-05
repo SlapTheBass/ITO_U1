@@ -75,4 +75,26 @@
       <Filter>Pliki źródłowe</Filter>
     </ClCompile>
   </ItemGroup>
+  <ItemGroup>
+    <Image Include="Utilities\aim.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="Utilities\spr_agent.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="Utilities\spr_bush.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="Utilities\spr_exit.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+    <Image Include="Utilities\spr_grass.png">
+      <Filter>Pliki zasobów</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Font Include="Utilities\font.TTF">
+      <Filter>Pliki zasobów</Filter>
+    </Font>
+  </ItemGroup>
 </Project>
