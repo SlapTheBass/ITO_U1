@@ -10,4 +10,4 @@ typedef enum E_appState { eONINIT, eSTART, eCLOSE };
 
 typedef enum E_keys { eNONE, eINC_SIZE, eDEC_SIZE, eRESET, eSPACE, eQUIT };
 
-enum class  E_objectType { eNONE, eAGENT, eOBSTACLE, eEXIT };
+enum class  E_objectType { eNONE, eOBSTACLE, eEXIT };

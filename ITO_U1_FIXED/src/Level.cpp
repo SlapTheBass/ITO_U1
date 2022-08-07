@@ -59,7 +59,7 @@ Tile* Level::GetTile(sf::Vector2i position)
 	rowIndex = (rowIndex > GRID_SIZE - 1) ? (GRID_SIZE - 1) : rowIndex;
 
 	auto tile = &GRID[columnIndex][rowIndex];
-	tile->tile_sprite.setColor(sf::Color(255, 255, 0, 200));
+	tile->tile_sprite.setColor(sf::Color(255, 255, 200, 180));
 
 	return tile;
 }
@@ -150,7 +150,7 @@ void Level::incSize(sf::Clock* timer)
 			}
 		}
 
-		//_objects.clear();
+		_objects.clear();
 		generateExits();
 		generateObstacles();
 
@@ -179,7 +179,7 @@ void Level::decSize(sf::Clock* timer)
 			}
 		}
 
-		//_objects.clear();
+		_objects.clear();
 		generateExits();
 		generateObstacles();
 

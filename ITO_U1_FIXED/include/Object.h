@@ -6,9 +6,6 @@
 class Object
 {
 public:
-	Object();
-	~Object();
-
 	sf::Vector2i GetPosition();
 	void SetPosition(int x, int y);
 
@@ -16,8 +13,9 @@ public:
 
 	E_objectType GetType() const;
 
+	Object();
+	~Object();
 
-private:
 	sf::Sprite _sprite;
 	sf::Vector2f _position;
 
