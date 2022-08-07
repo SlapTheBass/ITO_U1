@@ -25,6 +25,7 @@
     <ClInclude Include="include\Exit.h" />
     <ClInclude Include="include\Input.h" />
     <ClInclude Include="include\Level.h" />
+    <ClInclude Include="include\Object.h" />
     <ClInclude Include="include\Obstacle.h" />
     <ClInclude Include="include\PCH.h" />
     <ClInclude Include="include\UserInterface.h" />
@@ -38,6 +39,7 @@
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\Level.cpp" />
     <ClCompile Include="src\main.cpp" />
+    <ClCompile Include="src\Object.cpp" />
     <ClCompile Include="src\Obstacle.cpp" />
     <ClCompile Include="src\UserInterface.cpp" />
   </ItemGroup>
@@ -50,6 +52,9 @@
   </ItemGroup>
   <ItemGroup>
     <Font Include="Utilities\font.TTF" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
@@ -130,7 +135,8 @@
       <AdditionalDependencies>flac.lib;freetype.lib;ogg.lib;openal32.lib;sfml-audio-d.lib;sfml-graphics-d.lib;sfml-main-d.lib;sfml-network-d.lib;sfml-system-d.lib;sfml-window-d.lib;vorbis.lib;vorbisenc.lib;vorbisfile.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(ProjectDir)lib\*.dll" "$(OutDir)"</Command>
+      <Command>xcopy /y /d "$(ProjectDir)lib\*.dll" "$(OutDir)"
+xcopy /y /d "$(ProjectDir)Utilities\*.*" "$(OutDir)Utilities\"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">

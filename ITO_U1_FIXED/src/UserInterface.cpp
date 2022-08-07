@@ -49,3 +49,64 @@ void UserInterface::Draw(sf::RenderWindow* window)
 	window->draw(info);
 	window->draw(type);
 }
+
+void UserInterface::Update(Level* level)
+{
+	sf::Vector2i position = sf::Mouse::getPosition();
+
+	level_size = level->getLevelSize();
+	size.setString("Level size:  " + std::to_string(level_size) + " x " + std::to_string(level_size));
+
+	obstacles_number = level->getObstaclesNumber();
+	obstacles.setString("Number of obstacles: " + std::to_string(obstacles_number));
+
+	column_index = level->GetTile(position)->columnIndex;
+	row_index = level->GetTile(position)->rowIndex;
+	average_reward = level->GetTile(position)->reward;
+	discount = 0.9;
+
+	if (column_index >= level->getLevelSize())
+	{
+		info.setString("================= TILE INFO ================\n\ncolumn index: \t\trow index:\n\naverage reward: " + std::to_string(average_reward) +
+			"\n\ndiscount: " + std::to_string(discount));
+	}
+	else if (row_index >= level->getLevelSize())
+	{
+		info.setString("================= TILE INFO ================\n\ncolumn index: \t\trow index:\n\naverage reward: " + std::to_string(average_reward) +
+			"\n\ndiscount: " + std::to_string(discount));
+	}
+	else
+	{
+		info.setString("================= TILE INFO ================\n\ncolumn index: " + std::to_string(column_index) + "\trow index: " + std::to_string(row_index)
+			+ "\n\naverage reward: " + std::to_string(average_reward) + "\n\ndiscount: " + std::to_string(discount));
+	}
+
+	switch (level->GetTile(position)->type)
+	{
+	case eEMPTY:
+		TYPE = "EMPTY";
+		break;
+
+	case eAGENT:
+		TYPE = "AGENT";
+		break;
+
+	case eEXIT:
+		TYPE = "EXIT";
+		break;
+
+	case eOBSTACLE:
+		TYPE = "OBSTACLE";
+		break;
+
+	case eVOID:
+		TYPE = "  ";
+		break;
+
+	deafault:
+		TYPE = "  ";
+		break;
+	}
+
+	type.setString("TILE TYPE:  " + TYPE);
+}

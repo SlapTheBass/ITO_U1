@@ -2,6 +2,8 @@
 
 #include "PCH.h"
 #include "Input.h"
+#include "Exit.h"
+#include "Obstacle.h"
 
 struct Tile
 {
@@ -27,6 +29,10 @@ public:
 	  @Returns void */
 	void drawLevel(sf::RenderWindow* window);
 
+	/* Level Update method
+	   @Params - takes input, and timer for 
+	   processing level parameters 
+	*/
 	void Update(Input& input, sf::Clock* timer);
 
 	int getLevelSize();
@@ -58,8 +64,7 @@ private:
 
 	Tile GRID[10][10];
 
-	std::vector<Tile*> obstacles;
-	std::vector<Tile*> exits;
+	std::vector<std::unique_ptr<Object>> _objects;
 	E_action path;
 	std::vector<std::tuple<int, sf::Vector2i, float>> grids;
 
@@ -73,6 +78,7 @@ private:
 	void incSize(sf::Clock* timer);
 	void decSize(sf::Clock* timer);
 	void reset();
+	void ResetColor();
 	void keepSize(sf::Clock* timer);
 
 	void initTiles();
@@ -82,6 +88,7 @@ private:
 	void setStartTile(sf::Vector2i pos);
 
 	void generateExits();
+	void SpawnObjects();
 	
 	void checkExits();
 	void checkObstacles();

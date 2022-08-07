@@ -22,6 +22,7 @@ void App::Init()
 void App::Update()
 {
 	_level->Update(_input, &_timer);
+	_UI->Update(_level);
 }
 
 void App::Run()

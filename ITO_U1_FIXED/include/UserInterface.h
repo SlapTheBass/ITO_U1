@@ -10,7 +10,7 @@ public:
 	UserInterface();
 	~UserInterface();
 
-	void Update();
+	void Update(Level* level);
 	void Draw(sf::RenderWindow* window);
 
 private:
