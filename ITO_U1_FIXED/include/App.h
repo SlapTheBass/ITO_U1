@@ -1,7 +1,6 @@
 #pragma once
 
 #include "PCH.h"
-#include "Agent.h"
 #include "Level.h"
 #include "Input.h"
 #include "UserInterface.h"
@@ -26,7 +25,6 @@ private:
 
 	UserInterface* _UI;
 	Level* _level;
-	Agent* _agent;
 
 	/*default destructor*/
 	~App();

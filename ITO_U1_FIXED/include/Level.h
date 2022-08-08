@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "Exit.h"
 #include "Obstacle.h"
+#include "Agent.h"
 
 struct Tile
 {
@@ -65,8 +66,9 @@ private:
 	Tile GRID[10][10];
 
 	std::vector<std::unique_ptr<Object>> _objects;
-	E_action path;
+	Agent* _agent;
 	std::vector<std::tuple<int, sf::Vector2i, float>> grids;
+	E_action path;
 
 	sf::Texture empty;
 	sf::Texture	obstacle;
@@ -75,11 +77,19 @@ private:
 	float gain = 0;
 	bool run = false;
 
+
+	/* Input depednet methods 
+	   @Param timer allows to
+	   detect single press of 
+	   keyboard buttons  
+	 */
 	void incSize(sf::Clock* timer);
 	void decSize(sf::Clock* timer);
+	void resetAgent(sf::Clock* timer);
+
 	void reset();
 	void ResetColor();
-	void keepSize(sf::Clock* timer);
+	
 
 	void initTiles();
 
@@ -88,6 +98,8 @@ private:
 	void setStartTile(sf::Vector2i pos);
 
 	void generateExits();
+	void generatePlayerTile();
+
 	void SpawnObjects();
 	
 	void checkExits();

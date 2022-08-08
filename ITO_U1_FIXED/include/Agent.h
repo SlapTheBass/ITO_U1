@@ -1,25 +1,23 @@
 #pragma once
 
 #include "PCH.h" 
-#include "Level.h"
 
 class Agent
 {
 public:
-	Agent();
+	Agent(sf::Vector2f position);
 	~Agent();
 
-	void move(Level& level);
+	void move();
 
-	void Draw(sf::RenderWindow& window);
+	void Draw(sf::RenderWindow* window);
 
-	void Spawn(Level& level, sf::Clock* timer);
-
-	sf::Sprite getSprite();
+	void SetPosition(sf::Vector2f position);
+	sf::Vector2f GetPosition();
 
 private:
-	sf::Sprite  p_sprite;
-	sf::Texture p_texture;
+	sf::Sprite  _sprite;
+	sf::Texture _texture;
 
 	int x, y;
 };

@@ -78,7 +78,7 @@ void Level::Update(Input& input, sf::Clock* timer)
 	}
 	else if (input.pressedKey() == eRESET)
 	{
-		reset();
+		resetAgent(timer);
 		timer->restart();
 	}
 }
@@ -111,6 +111,7 @@ void Level::initTiles()
 
 	generateExits();
 	generateObstacles();
+	generatePlayerTile();
 
 	SpawnObjects();
 }
@@ -151,8 +152,10 @@ void Level::incSize(sf::Clock* timer)
 		}
 
 		_objects.clear();
+
 		generateExits();
 		generateObstacles();
+		generatePlayerTile();
 
 		SpawnObjects();
 	}
@@ -182,8 +185,17 @@ void Level::decSize(sf::Clock* timer)
 		_objects.clear();
 		generateExits();
 		generateObstacles();
+		generatePlayerTile();
 
 		SpawnObjects();
+	}
+}
+
+void Level::resetAgent(sf::Clock* timer)
+{
+	if (timer->getElapsedTime().asMilliseconds() >= 50)
+	{
+		_agent->SetPosition(sf::Vector2f(start_x, start_y));
 	}
 }
 
@@ -262,11 +274,29 @@ void Level::generateObstacles()
 				{
 					GRID[col][row].type = eOBSTACLE;
 					GRID[col][row].reward = -1;
-					//_objects.emplace_back(&GRID[col][row]);
 				}
 			}
 		}
 	}
+}
+
+void Level::generatePlayerTile()
+{
+	int col = rand() % (GRID_SIZE - 1);
+	int row = rand() % (GRID_SIZE - 1);
+
+	while ((GetTile(col, row)->type != eEMPTY) || col == GRID_SIZE - 1 || row == GRID_SIZE - 1 ||
+		col == 0 || row == 0)
+	{
+		col = rand() % (GRID_SIZE - 1);
+		row = rand() % (GRID_SIZE - 1);
+	}
+
+	start_x = col;
+	start_y = row;
+
+	auto tile = &GRID[col][row];
+	tile->type = eAGENT;
 }
 
 void Level::drawLevel(sf::RenderWindow* window)
@@ -285,6 +315,8 @@ void Level::drawLevel(sf::RenderWindow* window)
 	{
 		object->Draw(window);
 	}
+
+	_agent->Draw(window);
 }
 
 void Level::ResetColor()
@@ -318,6 +350,10 @@ void Level::SpawnObjects()
 			case eEXIT:
 				object = std::make_unique<Exit>(tile->tile_sprite.getPosition());
 				_objects.push_back(std::move(object));
+				break;
+
+			case eAGENT:
+				_agent = new Agent(tile->tile_sprite.getPosition());
 				break;
 			}
 		}
