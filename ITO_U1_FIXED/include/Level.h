@@ -6,14 +6,18 @@
 #include "Obstacle.h"
 #include "Agent.h"
 
+/* Structure describing
+   properties of  
+   all level fields
+*/
 struct Tile
 {
 	E_tileType   type = eEMPTY;
 	E_tileStatus status = eINACTIVE;
-	float       reward = 0.0f;
-	int         columnIndex = 0;
-	int         rowIndex = 0;
-	sf::Sprite  tile_sprite;
+	float        reward = 0.0f;
+	int          columnIndex = 0;
+	int          rowIndex = 0;
+	sf::Sprite   tile_sprite;
 };
 
 class Level
@@ -27,7 +31,8 @@ public:
 
 	/* Drawing level method
 	  @Param takes pointer to sf::Window
-	  @Returns void */
+	  @Returns void 
+	*/
 	void drawLevel(sf::RenderWindow* window);
 
 	/* Level Update method
@@ -36,18 +41,43 @@ public:
 	*/
 	void Update(Input& input, sf::Clock* timer);
 
+	/* Helper methods returning GRID size
+	   and number of obstacles   
+	*/
 	int getLevelSize();
 	int getObstaclesNumber();
 
+	/* Tile getting methods 
+	   @Param default is taking position as vector
+	   @Overloaded method is taking column and row indexes
+	*/
 	Tile* GetTile(sf::Vector2i position);
 	Tile* GetTile(int x, int y);
 
+	/* Method that returns set of tiles 
+	   that are described as exits
+	*/
+	std::vector<Tile*> checkExits();
+
+	/* Method that returns set of tiles
+	   that are described as obstacles
+	*/
+	std::vector<Tile*> checkObstacles();
+
+	/* This method returns actual
+	   Agent tile
+	*/
+	Tile* GetAgentTile();
+
+	/* Two mehtods for update
+	   agent sprite
+	*/
+	void ClearAgent();
+	void SpawnAgent();
+
+	Agent* GetAgentInfo();
+
 	void setAgentPos(sf::Vector2i pos);
-
-
-	sf::Vector2i getAgent();
-
-	
 
 	E_action getSequence();
 
@@ -101,7 +131,4 @@ private:
 	void generatePlayerTile();
 
 	void SpawnObjects();
-	
-	void checkExits();
-	void checkObstacles();
 };

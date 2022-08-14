@@ -46,9 +46,6 @@ Tile* Level::GetTile(sf::Vector2i position)
 
 	ResetColor();
 
-	DBG(position.x);
-	DBG(position.y);
-
 	columnIndex = ((position.x - 576) / 50);
 	rowIndex = ((position.y - 325) / 50);
 
@@ -355,6 +352,88 @@ void Level::SpawnObjects()
 			case eAGENT:
 				_agent = new Agent(tile->tile_sprite.getPosition());
 				break;
+			}
+		}
+	}
+}
+
+std::vector<Tile*> Level::checkExits()
+{
+	std::vector<Tile*> exits;
+
+	for (int i = 0; i < GRID_SIZE; ++i)
+	{
+		for (int j = 0; j < GRID_SIZE; ++j)
+		{
+			auto tile = &GRID[i][j];
+
+			if (tile->type == eEXIT)
+			{
+				exits.emplace_back(tile);
+			}
+		}
+	}
+
+	return exits;
+}
+
+std::vector<Tile*> Level::checkObstacles()
+{
+	std::vector<Tile*> obstacles;
+
+	for (int i = 0; i < GRID_SIZE; ++i)
+	{
+		for (int j = 0; j < GRID_SIZE; ++j)
+		{
+			auto tile = &GRID[i][j];
+
+			if (tile->type == eOBSTACLE)
+			{
+				obstacles.emplace_back(tile);
+			}
+		}
+	}
+
+	return obstacles;
+
+}
+
+Tile* Level::GetAgentTile()
+{
+	Tile* Agent = nullptr;
+
+	for (int i = 0; i < GRID_SIZE; ++i)
+	{
+		for (int j = 0; j < GRID_SIZE; ++j)
+		{
+			auto tile = &GRID[i][j];
+
+			if (tile->type == eAGENT)
+			{
+				Agent = tile;
+			}
+		}
+	}
+
+	return Agent;
+}
+
+void Level::ClearAgent()
+{
+	_agent->~Agent();
+}
+
+void Level::SpawnAgent()
+{
+	for (int i = 0; i < GRID_SIZE; ++i)
+	{
+		for (int j = 0; j < GRID_SIZE; ++j)
+		{
+			auto tile = &GRID[i][j];
+
+			if (tile->type == eAGENT)
+			{
+				_agent = new Agent(tile->tile_sprite.getPosition());
 			}
 		}
 	}

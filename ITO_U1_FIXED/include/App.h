@@ -4,14 +4,15 @@
 #include "Level.h"
 #include "Input.h"
 #include "UserInterface.h"
+#include "Algorithm.h"
 
 class App
 {
-public:
-	/*default constructor*/
+public: 
+	/* default constructor */
 	App();
 
-	/*main loop*/
+	/* main loop */
 	void Run();
 
 private:
@@ -25,16 +26,17 @@ private:
 
 	UserInterface* _UI;
 	Level* _level;
+	Algorithm* _algorithm;
 
-	/*default destructor*/
+	/* default destructor */
 	~App();
 
-	/*this method initializes all application members*/
+	/* this method initializes all application members */
 	void Init();
 
-	/*update members*/
+	/* update members */
 	void Update();
 
-	/*draw members and visualize main window*/
+	/* draw members and visualize main window */
 	void Draw();
-};
+}; 

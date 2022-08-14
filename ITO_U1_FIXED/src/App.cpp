@@ -17,11 +17,23 @@ void App::Init()
 
 	_level = new Level();
 	_UI = new UserInterface();
+	_algorithm = new Algorithm();
 }
 
 void App::Update()
 {
 	_level->Update(_input, &_timer);
+
+	if (_input.pressedKey() == eSPACE)
+	{
+		if (_timer.getElapsedTime().asMilliseconds() >= 50)
+		{
+			_level->ClearAgent();
+			_algorithm->seekPath(_level);
+			_level->SpawnAgent();
+		}
+		_timer.restart();
+	}
 	_UI->Update(_level);
 }
 
