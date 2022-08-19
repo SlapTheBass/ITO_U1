@@ -24,5 +24,7 @@ private:
 
 	void GridInit(Level* level);
 
+	void CheckTile(Tile* tile, Tile* agentTile);
+
 	float getGain();
 };

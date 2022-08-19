@@ -148,13 +148,9 @@ void Algorithm::calculateRewards(Level* level)
 	{
 		for (int j = 0; j < gridSize; ++j)
 		{
-			if (_grid[i][j]->type == eEMPTY)
+			if (_grid[i][j]->type != eEXIT && _grid[i][j]->type != eOBSTACLE)
 			{
 				_grid[i][j]->reward = (_grid[i][j]->reward / iterations);
-			}
-			else if (_grid[i][j]->type == eAGENT)
-			{
-				_grid[i][j]->reward = 0;
 			}
 		}
 	}
@@ -191,126 +187,22 @@ void Algorithm::seekPath(Level* level)
 			{
 				if (EAST->reward > WEST->reward)
 				{
-					if (EAST->type == eEXIT)
-					{
-						gain += 1;
-						EAST->reward += gain;
-						agentTile->columnIndex = EAST->columnIndex;
-						agentTile->rowIndex = EAST->rowIndex;
-						EAST->type = eAGENT;
-						//path = ACTION::EAST;
-					}
-					else if (EAST->type == eEMPTY)
-					{
-						gain += 0.01;
-						EAST->reward += gain;
-						agentTile->columnIndex = EAST->columnIndex;
-						agentTile->rowIndex = EAST->rowIndex;
-						EAST->type = eAGENT;
-						//path = ACTION::EAST;
-					}
-					else
-					{
-						gain -= 1;
-						EAST->reward += gain;
-						agentTile->columnIndex = EAST->columnIndex;
-						agentTile->rowIndex = EAST->rowIndex;
-						EAST->type = eAGENT;
-						//path = ACTION::EAST;
-					}
+					CheckTile(EAST, agentTile);
 				}
 				else
 				{
-					if (WEST->type == eEXIT)
-					{
-						gain += 1;
-						WEST->reward += gain;
-						agentTile->columnIndex = WEST->columnIndex;
-						agentTile->rowIndex = WEST->rowIndex;
-						WEST->type = eAGENT;
-						//path = ACTION::WEST;
-					}
-					else if (WEST->type == eEMPTY)
-					{
-						gain += 0.01;
-						WEST->reward += gain;
-						agentTile->columnIndex = WEST->columnIndex;
-						agentTile->rowIndex = WEST->rowIndex;
-						WEST->type = eAGENT;
-						//path = ACTION::WEST;
-					}
-					else
-					{
-						gain -= 1;
-						WEST->reward += gain;
-						agentTile->columnIndex = WEST->columnIndex;
-						agentTile->rowIndex = WEST->rowIndex;
-						WEST->type = eAGENT;
-						//path = ACTION::WEST;
-					}
+					CheckTile(WEST, agentTile);
 				}
 			}
 			else
 			{
 				if (NORTH->reward > SOUTH->reward)
 				{
-					if (NORTH->type == eEXIT)
-					{
-						gain += 1;
-						NORTH->reward += gain;
-						agentTile->columnIndex = NORTH->columnIndex;
-						agentTile->rowIndex = NORTH->rowIndex;
-						NORTH->type = eAGENT;
-						//path = ACTION::NORTH;
-					}
-					else if (NORTH->type == eEMPTY)
-					{
-						gain += 0.01;
-						NORTH->reward += gain;
-						agentTile->columnIndex = NORTH->columnIndex;
-						agentTile->rowIndex = NORTH->rowIndex;
-						NORTH->type = eAGENT;
-						//path = ACTION::NORTH;
-					}
-					else
-					{
-						gain -= 1;
-						NORTH->reward += gain;
-						agentTile->columnIndex = NORTH->columnIndex;
-						agentTile->rowIndex = NORTH->rowIndex;
-						NORTH->type = eAGENT;
-						//path = ACTION::NORTH;
-					}
+					CheckTile(NORTH, agentTile);
 				}
 				else
 				{
-					if (SOUTH->type == eEXIT)
-					{
-						gain += 1;
-						SOUTH->reward += gain;
-						agentTile->columnIndex = SOUTH->columnIndex;
-						agentTile->rowIndex = SOUTH->rowIndex;
-						SOUTH->type = eAGENT;
-						//path = ACTION::SOUTH;
-					}
-					else if (SOUTH->type == eEMPTY)
-					{
-						gain += 0.01;
-						SOUTH->reward += gain;
-						agentTile->columnIndex = SOUTH->columnIndex;
-						agentTile->rowIndex = SOUTH->rowIndex;
-						SOUTH->type = eAGENT;
-						//path = ACTION::SOUTH;
-					}
-					else
-					{
-						gain -= 1;
-						SOUTH->reward += gain;
-						agentTile->columnIndex = SOUTH->columnIndex;
-						agentTile->rowIndex = SOUTH->rowIndex;
-						SOUTH->type = eAGENT;
-						//path = ACTION::SOUTH;
-					}
+					CheckTile(SOUTH, agentTile);
 				}
 			}
 		}
@@ -326,5 +218,39 @@ void Algorithm::GridInit(Level* level)
 		{
 			_grid[i][j] = level->GetTile(i, j);
 		}
+	}
+}
+
+void Algorithm::CheckTile(Tile* tile, Tile* agentTile)
+{
+	if (tile->type == eEXIT)
+	{
+		gain += 1;
+		tile->reward += gain;
+		agentTile->columnIndex = tile->columnIndex;
+		agentTile->rowIndex = tile->rowIndex;
+		agentTile->type = eEMPTY;
+		tile->type = eAGENT;
+		//path = ACTION::EAST;
+	}
+	else if (tile->type == eEMPTY)
+	{
+		gain += 0.01;
+		tile->reward += gain;
+		agentTile->columnIndex = tile->columnIndex;
+		agentTile->rowIndex = tile->rowIndex;
+		agentTile->type = eEMPTY;
+		tile->type = eAGENT;
+		//path = ACTION::EAST;
+	}
+	else
+	{
+		gain -= 1;
+		tile->reward += gain;
+		agentTile->columnIndex = tile->columnIndex;
+		agentTile->rowIndex = tile->rowIndex;
+		agentTile->type = eEMPTY;
+		tile->type = eAGENT;
+		//path = ACTION::EAST;
 	}
 }
