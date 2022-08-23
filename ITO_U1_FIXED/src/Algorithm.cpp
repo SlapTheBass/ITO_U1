@@ -14,7 +14,7 @@ Algorithm::~Algorithm()
 void Algorithm::FindR(Level* level)
 {
 	grids.clear();
-	int index = 0;
+	int index = 1;
 
 	std::vector<Tile*> exits = level->checkExits();
 	std::vector<Tile*> obstacles = level->checkObstacles();
@@ -23,6 +23,8 @@ void Algorithm::FindR(Level* level)
 
 	objects.insert(objects.end(), exits.begin(), exits.end());
 	objects.insert(objects.end(), obstacles.begin(), obstacles.end());
+
+	int gridSize = level->getLevelSize();
 
 	for (auto object : objects)
 	{
@@ -50,7 +52,7 @@ void Algorithm::FindR(Level* level)
 		float temp;
 		auto agentTile = level->GetAgentTile();
 
-		for (int i = object->columnIndex; i < agentTile->columnIndex; ++i)
+		for (int i = object->columnIndex; i < gridSize; ++i)
 		{
 			if (object->columnIndex == i)
 			{
@@ -64,7 +66,7 @@ void Algorithm::FindR(Level* level)
 			}
 		}
 
-		for (int i = object->columnIndex; i >= agentTile->columnIndex; --i)
+		for (int i = object->columnIndex; i >= 0; --i)
 		{
 			if (object->columnIndex == i)
 			{
@@ -78,21 +80,22 @@ void Algorithm::FindR(Level* level)
 			}
 		}
 
-		for (int i = 0; i <= agentTile->columnIndex; ++i)
+		for (int i = 0; i < gridSize; ++i)
 		{
-			for (int j = object->rowIndex + 1; j <= agentTile->rowIndex; ++j)
+			for (int j = object->rowIndex + 1; j < gridSize; ++j)
 			{
-				subGRID[i][j].reward = (subGRID[i][j - 1].reward * 0.9) - 0.04;
+				subGRID[i][j].reward = (subGRID[i][j - 1].reward * 0.9);
+			}
+		}
+		
+		for (int i = 0; i < gridSize; ++i)
+		{
+			for (int j = object->rowIndex - 1; j >= 0; --j)
+			{
+				subGRID[i][j].reward = (subGRID[i][j + 1].reward * 0.9);
 			}
 		}
 
-		for (int i = level->getLevelSize() - 1; i >= agentTile->columnIndex; --i)
-		{
-			for (int j = object->rowIndex - 1; j >= agentTile->rowIndex; --j)
-			{
-				subGRID[i][j].reward = (subGRID[i][j + 1].reward * 1.111);
-			}
-		}
 
 		for (int i = 0; i < level->getLevelSize(); ++i)
 		{
@@ -158,9 +161,10 @@ void Algorithm::calculateRewards(Level* level)
 
 void Algorithm::seekPath(Level* level)
 {
-	calculateRewards(level);
+	//calculateRewards(level);
 
 	auto agentTile = level->GetAgentTile();
+	int gridSize = level->getLevelSize();
 
 	Tile* EAST, * WEST, * NORTH, * SOUTH;
 	EAST = _grid[agentTile->columnIndex - 1][agentTile->rowIndex];
@@ -168,15 +172,20 @@ void Algorithm::seekPath(Level* level)
 	NORTH = _grid[agentTile->columnIndex][agentTile->rowIndex - 1];
 	SOUTH = _grid[agentTile->columnIndex][agentTile->rowIndex + 1];
 
+	bool testHor = CanMoveHor(agentTile, gridSize);
+	bool testVer = CanMoveVert(agentTile, gridSize);
+
+	canMove = testHor || testVer;
+
 	if (canMove)
 	{
-		if ((agentTile->columnIndex == level->getLevelSize() - 1) || (agentTile->columnIndex == 0))
+		if (testHor == false)
 		{
-			canMove = false;
+			VerticalCheck(NORTH, SOUTH, agentTile);
 		}
-		else if ((agentTile->rowIndex == level->getLevelSize() - 1) || (agentTile->rowIndex == 0))
+		else if (testVer == false)
 		{
-			canMove = false;
+			HorizontalCheck(EAST, WEST, agentTile);
 		}
 		else
 		{
@@ -185,25 +194,11 @@ void Algorithm::seekPath(Level* level)
 
 			if (horizontal > vertical)
 			{
-				if (EAST->reward > WEST->reward)
-				{
-					CheckTile(EAST, agentTile);
-				}
-				else
-				{
-					CheckTile(WEST, agentTile);
-				}
+				HorizontalCheck(EAST, WEST, agentTile);
 			}
 			else
 			{
-				if (NORTH->reward > SOUTH->reward)
-				{
-					CheckTile(NORTH, agentTile);
-				}
-				else
-				{
-					CheckTile(SOUTH, agentTile);
-				}
+				VerticalCheck(NORTH, SOUTH, agentTile);
 			}
 		}
 	}
@@ -235,7 +230,7 @@ void Algorithm::CheckTile(Tile* tile, Tile* agentTile)
 	}
 	else if (tile->type == eEMPTY)
 	{
-		gain += 0.01;
+		gain += 0.3;
 		tile->reward += gain;
 		agentTile->columnIndex = tile->columnIndex;
 		agentTile->rowIndex = tile->rowIndex;
@@ -253,4 +248,52 @@ void Algorithm::CheckTile(Tile* tile, Tile* agentTile)
 		tile->type = eAGENT;
 		//path = ACTION::EAST;
 	}
+}
+
+void Algorithm::HorizontalCheck(Tile* EAST, Tile* WEST, Tile* agentTile)
+{
+	if (EAST->reward > WEST->reward)
+	{
+		CheckTile(EAST, agentTile);
+	}
+	else
+	{
+		CheckTile(WEST, agentTile);
+	}
+}
+
+void Algorithm::VerticalCheck(Tile* NORTH, Tile* SOUTH, Tile* agentTile)
+{
+	if (NORTH->reward > SOUTH->reward)
+	{
+		CheckTile(NORTH, agentTile);
+	}
+	else
+	{
+		CheckTile(SOUTH, agentTile);
+	}
+}
+
+bool Algorithm::CanMoveVert(Tile* tile, int size)
+{
+	bool retv = true;
+
+	if ((tile->rowIndex == size - 1) || (tile->rowIndex == 0))
+	{
+		retv = false;
+	}
+
+	return retv;
+}
+
+bool Algorithm::CanMoveHor(Tile* tile, int size)
+{
+	bool retv = true;
+
+	if ((tile->columnIndex == size - 1) || (tile->columnIndex == 0))
+	{
+		retv = false;
+	}
+
+	return retv;
 }

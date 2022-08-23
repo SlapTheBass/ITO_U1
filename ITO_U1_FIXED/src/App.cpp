@@ -23,6 +23,7 @@ void App::Init()
 void App::Update()
 {
 	_level->Update(_input, &_timer);
+	_algorithm->calculateRewards(_level);
 
 	if (_input.pressedKey() == eSPACE)
 	{

@@ -10,6 +10,7 @@ public:
 	~Algorithm();
 
 	void seekPath(Level* level);
+	void calculateRewards(Level* level);
 
 private:
 	std::vector<std::tuple<int, sf::Vector2i, float>> grids;
@@ -18,13 +19,17 @@ private:
 	int iterations;
 	float gain;
 
-	void calculateRewards(Level* level);
-
 	void FindR(Level* level);
 
 	void GridInit(Level* level);
 
 	void CheckTile(Tile* tile, Tile* agentTile);
+
+	void HorizontalCheck(Tile* EAST, Tile* WEST, Tile* agentTile);
+	void VerticalCheck(Tile* NORTH, Tile* SOUTH, Tile* agentTile);
+
+	bool CanMoveVert(Tile* tile, int size);
+	bool CanMoveHor(Tile* tile, int size);
 
 	float getGain();
 };
