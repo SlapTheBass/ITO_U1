@@ -161,36 +161,180 @@ void Algorithm::calculateRewards(Level* level)
 
 void Algorithm::seekPath(Level* level)
 {
-	//calculateRewards(level);
+	calculateRewards(level);
 
 	auto agentTile = level->GetAgentTile();
 	int gridSize = level->getLevelSize();
 
 	Tile* EAST, * WEST, * NORTH, * SOUTH;
-	EAST = _grid[agentTile->columnIndex - 1][agentTile->rowIndex];
-	WEST = _grid[agentTile->columnIndex + 1][agentTile->rowIndex];
+	EAST = _grid[agentTile->columnIndex + 1][agentTile->rowIndex];
+	WEST = _grid[agentTile->columnIndex - 1][agentTile->rowIndex];
 	NORTH = _grid[agentTile->columnIndex][agentTile->rowIndex - 1];
 	SOUTH = _grid[agentTile->columnIndex][agentTile->rowIndex + 1];
 
-	bool testHor = CanMoveHor(agentTile, gridSize);
-	bool testVer = CanMoveVert(agentTile, gridSize);
+	bool eastBorder = CanMoveEast(agentTile, gridSize);
+	bool westBorder = CanMoveWest(agentTile, gridSize);
+	bool northBorder = CanMoveNorth(agentTile, gridSize);
+	bool southBorder = CanMoveSouth(agentTile, gridSize);
 
-	canMove = testHor || testVer;
+	canMove = eastBorder || westBorder || northBorder || southBorder;
+
+	float horizontal, vertical;
 
 	if (canMove)
 	{
-		if (testHor == false)
+		if (eastBorder == false)
 		{
-			VerticalCheck(NORTH, SOUTH, agentTile);
+			horizontal = WEST->reward;
+
+			if (northBorder == false)
+			{
+				vertical = SOUTH->reward;
+			}
+			else if (southBorder == false)
+			{
+				vertical = NORTH->reward;
+			}
+			else
+			{
+				vertical = (NORTH->reward > SOUTH->reward ? NORTH->reward : SOUTH->reward);
+			}
+
+			if (horizontal > vertical)
+			{
+				HorizontalCheck(WEST, WEST, agentTile);
+			}
+			else
+			{
+				if (northBorder == false)
+				{
+					CheckTile(SOUTH, agentTile);
+				}
+				else if (southBorder == false)
+				{
+					CheckTile(NORTH, agentTile);
+				}
+				else
+				{
+					VerticalCheck(NORTH, SOUTH, agentTile);
+				}
+			}
 		}
-		else if (testVer == false)
+		else if (westBorder == false)
 		{
-			HorizontalCheck(EAST, WEST, agentTile);
+			horizontal = EAST->reward;
+			
+			if (northBorder == false)
+			{
+				vertical = SOUTH->reward;
+			}
+			else if (southBorder == false)
+			{
+				vertical = NORTH->reward;
+			}
+			else
+			{
+				vertical = (NORTH->reward > SOUTH->reward ? NORTH->reward : SOUTH->reward);
+			}
+
+			if (horizontal > vertical)
+			{
+				HorizontalCheck(EAST, EAST, agentTile);
+			}
+			else
+			{
+				if (northBorder == false)
+				{
+					CheckTile(SOUTH, agentTile);
+				}
+				else if (southBorder == false)
+				{
+					CheckTile(NORTH, agentTile);
+				}
+				else
+				{
+					VerticalCheck(NORTH, SOUTH, agentTile);
+				}
+			}
+		}
+		else if (northBorder == false)
+		{
+			vertical = SOUTH->reward;
+
+			if (eastBorder == false)
+			{
+				horizontal = WEST->reward;
+			}
+			else if (westBorder == false)
+			{
+				horizontal = EAST->reward;
+			}
+			else
+			{
+				horizontal = (EAST->reward > WEST->reward ? EAST->reward : WEST->reward);
+			}
+
+			if (horizontal > vertical)
+			{
+				if (eastBorder == false)
+				{
+					CheckTile(WEST, agentTile);
+				}
+				if (westBorder == false)
+				{
+					CheckTile(EAST, agentTile);
+				}
+				else
+				{
+					HorizontalCheck(EAST, WEST, agentTile);
+				}
+			}
+			else
+			{
+				VerticalCheck(SOUTH, SOUTH, agentTile);
+			}
+		}
+		else if (southBorder == false)
+		{
+			vertical = NORTH->reward;
+
+			if (eastBorder == false)
+			{
+				horizontal = WEST->reward;
+			}
+			else if (westBorder == false)
+			{
+				horizontal = EAST->reward;
+			}
+			else
+			{
+				horizontal = (EAST->reward > WEST->reward ? EAST->reward : WEST->reward);
+			}
+
+			if (horizontal > vertical)
+			{
+				if (eastBorder == false)
+				{
+					CheckTile(WEST, agentTile);
+				}
+				if (westBorder == false)
+				{
+					CheckTile(EAST, agentTile);
+				}
+				else
+				{
+					HorizontalCheck(EAST, WEST, agentTile);
+				}
+			}
+			else
+			{
+				VerticalCheck(NORTH, NORTH, agentTile);
+			}
 		}
 		else
 		{
-			float horizontal = (EAST->reward > WEST->reward ? EAST->reward : WEST->reward);
-			float vertical = (NORTH->reward > SOUTH->reward ? NORTH->reward : SOUTH->reward);
+			horizontal = (EAST->reward > WEST->reward ? EAST->reward : WEST->reward);
+			vertical = (NORTH->reward > SOUTH->reward ? NORTH->reward : SOUTH->reward);
 
 			if (horizontal > vertical)
 			{
@@ -220,8 +364,7 @@ void Algorithm::CheckTile(Tile* tile, Tile* agentTile)
 {
 	if (tile->type == eEXIT)
 	{
-		gain += 1;
-		tile->reward += gain;
+		tile->reward += 1;
 		agentTile->columnIndex = tile->columnIndex;
 		agentTile->rowIndex = tile->rowIndex;
 		agentTile->type = eEMPTY;
@@ -230,8 +373,7 @@ void Algorithm::CheckTile(Tile* tile, Tile* agentTile)
 	}
 	else if (tile->type == eEMPTY)
 	{
-		gain += 0.3;
-		tile->reward += gain;
+		tile->reward += 0.3;
 		agentTile->columnIndex = tile->columnIndex;
 		agentTile->rowIndex = tile->rowIndex;
 		agentTile->type = eEMPTY;
@@ -240,8 +382,7 @@ void Algorithm::CheckTile(Tile* tile, Tile* agentTile)
 	}
 	else
 	{
-		gain -= 1;
-		tile->reward += gain;
+		tile->reward += -1;
 		agentTile->columnIndex = tile->columnIndex;
 		agentTile->rowIndex = tile->rowIndex;
 		agentTile->type = eEMPTY;
@@ -274,11 +415,11 @@ void Algorithm::VerticalCheck(Tile* NORTH, Tile* SOUTH, Tile* agentTile)
 	}
 }
 
-bool Algorithm::CanMoveVert(Tile* tile, int size)
+bool Algorithm::CanMoveEast(Tile* tile, int size)
 {
 	bool retv = true;
 
-	if ((tile->rowIndex == size - 1) || (tile->rowIndex == 0))
+	if (tile->columnIndex == size - 1)
 	{
 		retv = false;
 	}
@@ -286,11 +427,35 @@ bool Algorithm::CanMoveVert(Tile* tile, int size)
 	return retv;
 }
 
-bool Algorithm::CanMoveHor(Tile* tile, int size)
+bool Algorithm::CanMoveWest(Tile* tile, int size)
 {
 	bool retv = true;
 
-	if ((tile->columnIndex == size - 1) || (tile->columnIndex == 0))
+	if (tile->columnIndex == 0)
+	{
+		retv = false;
+	}
+
+	return retv;
+}
+
+bool Algorithm::CanMoveNorth(Tile* tile, int size)
+{
+	bool retv = true;
+
+	if (tile->rowIndex == 0)
+	{
+		retv = false;
+	}
+
+	return retv;
+}
+
+bool Algorithm::CanMoveSouth(Tile* tile, int size)
+{
+	bool retv = true;
+
+	if (tile->rowIndex == size - 1)
 	{
 		retv = false;
 	}

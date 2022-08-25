@@ -28,8 +28,12 @@ private:
 	void HorizontalCheck(Tile* EAST, Tile* WEST, Tile* agentTile);
 	void VerticalCheck(Tile* NORTH, Tile* SOUTH, Tile* agentTile);
 
-	bool CanMoveVert(Tile* tile, int size);
-	bool CanMoveHor(Tile* tile, int size);
+	bool CanMoveWest(Tile* tile, int size);
+	bool CanMoveEast(Tile* tile, int size);
+	bool CanMoveNorth(Tile* tile, int size);
+	bool CanMoveSouth(Tile* tile, int size);
+
+	Tile* CompareTileRewards(Tile* tile1, Tile* tile2);
 
 	float getGain();
 };

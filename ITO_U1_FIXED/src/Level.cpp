@@ -108,7 +108,7 @@ void Level::initTiles()
 
 	generateExits();
 	generateObstacles();
-	generatePlayerTile();
+	generateAgentTile();
 
 	SpawnObjects();
 }
@@ -152,7 +152,7 @@ void Level::incSize(sf::Clock* timer)
 
 		generateExits();
 		generateObstacles();
-		generatePlayerTile();
+		generateAgentTile();
 
 		SpawnObjects();
 	}
@@ -182,7 +182,7 @@ void Level::decSize(sf::Clock* timer)
 		_objects.clear();
 		generateExits();
 		generateObstacles();
-		generatePlayerTile();
+		generateAgentTile();
 
 		SpawnObjects();
 	}
@@ -192,7 +192,9 @@ void Level::resetAgent(sf::Clock* timer)
 {
 	if (timer->getElapsedTime().asMilliseconds() >= 50)
 	{
-		_agent->SetPosition(sf::Vector2f(start_x, start_y));
+		ClearAgent();
+		generateAgentTile();
+		SpawnAgent();
 	}
 }
 
@@ -277,7 +279,7 @@ void Level::generateObstacles()
 	}
 }
 
-void Level::generatePlayerTile()
+void Level::generateAgentTile()
 {
 	int col = rand() % (GRID_SIZE - 1);
 	int row = rand() % (GRID_SIZE - 1);
@@ -421,6 +423,14 @@ Tile* Level::GetAgentTile()
 void Level::ClearAgent()
 {
 	_agent->~Agent();
+
+	for (auto tile : GRID)
+	{
+		if (tile->type = eAGENT)
+		{
+			tile->type = eEMPTY;
+		}
+	}
 }
 
 void Level::SpawnAgent()

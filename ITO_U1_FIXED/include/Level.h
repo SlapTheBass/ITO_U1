@@ -128,7 +128,7 @@ private:
 	void setStartTile(sf::Vector2i pos);
 
 	void generateExits();
-	void generatePlayerTile();
+	void generateAgentTile();
 
 	void SpawnObjects();
 };
