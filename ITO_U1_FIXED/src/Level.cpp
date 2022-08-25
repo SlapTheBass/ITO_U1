@@ -281,6 +281,19 @@ void Level::generateObstacles()
 
 void Level::generateAgentTile()
 {
+	for (int i = 0; i < GRID_SIZE; ++i)
+	{
+		for (int j = 0; j < GRID_SIZE; ++j)
+		{
+			auto tile = &GRID[i][j];
+
+			if (tile->type == eAGENT)
+			{
+				tile->type = eEMPTY;
+			}
+		}
+	}
+
 	int col = rand() % (GRID_SIZE - 1);
 	int row = rand() % (GRID_SIZE - 1);
 
@@ -423,14 +436,6 @@ Tile* Level::GetAgentTile()
 void Level::ClearAgent()
 {
 	_agent->~Agent();
-
-	for (auto tile : GRID)
-	{
-		if (tile->type = eAGENT)
-		{
-			tile->type = eEMPTY;
-		}
-	}
 }
 
 void Level::SpawnAgent()

@@ -97,7 +97,6 @@ private:
 
 	std::vector<std::unique_ptr<Object>> _objects;
 	Agent* _agent;
-	std::vector<std::tuple<int, sf::Vector2i, float>> grids;
 	E_action path;
 
 	sf::Texture empty;

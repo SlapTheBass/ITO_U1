@@ -161,7 +161,7 @@ void Algorithm::calculateRewards(Level* level)
 
 void Algorithm::seekPath(Level* level)
 {
-	calculateRewards(level);
+	//calculateRewards(level);
 
 	auto agentTile = level->GetAgentTile();
 	int gridSize = level->getLevelSize();
