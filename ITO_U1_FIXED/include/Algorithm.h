@@ -18,11 +18,23 @@ public:
 	/* Method calulates average rewards for all subgrids generated for specific  objects */
 	void calculateRewards(Level* level);
 
+	/* Reset parameters */
+	void Reset();
+
+	/* Check if agent can move */
+	bool CanMove();
+
+	/* Check if exit has been found*/
+	bool ExitFound();
+
 private:
 	std::vector<std::tuple<int, sf::Vector2i, float>> grids;
 	E_tileType tempType = eEMPTY;
 	Tile* _grid[10][10];
 	bool canMove = true;
+	bool reset = false;
+	bool exitFound = false;
+
 	int iterations;
 	float horizontal, vertical;
 	float gain;
@@ -30,6 +42,7 @@ private:
 	bool westBorder;
 	bool northBorder;
 	bool southBorder;
+	float discount = 0.9f;
 
 	/* Method create subgrids for every object placed on level 
 	   then it calculates separate rewards for them and places them in tuple

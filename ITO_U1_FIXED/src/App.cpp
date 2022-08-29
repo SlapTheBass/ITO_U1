@@ -22,15 +22,25 @@ void App::Init()
 
 void App::Update()
 {
-	_level->Update(_input, &_timer); 
+	_level->Update(_input, &_timer);  
+	 _algorithm->calculateRewards(_level);
 
+	if (_input.pressedKey() == eRESET)
+	{
+		_algorithm->Reset();
+	}
+	 
 	if (_input.pressedKey() == eSPACE) //if space is pressed algorithm calculates new position of agent
 	{
 		if (_timer.getElapsedTime().asMilliseconds() >= 50)
 		{
-			_level->ClearAgent();
-			_algorithm->seekPath(_level);
-			_level->SpawnAgent();
+			if (_algorithm->CanMove())
+			{
+				_level->ClearAgent();
+				_algorithm->seekPath(_level);
+				_level->SpawnAgent();
+				_level->DecreaseSteps();
+			}
 		}
 		_timer.restart();
 	}

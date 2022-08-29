@@ -82,9 +82,6 @@
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="Utilities\aim.png">
-      <Filter>Pliki zasobów</Filter>
-    </Image>
     <Image Include="Utilities\spr_agent.png">
       <Filter>Pliki zasobów</Filter>
     </Image>

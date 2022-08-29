@@ -75,11 +75,10 @@ public:
 	void ClearAgent();
 	void SpawnAgent();
 
-	Agent* GetAgentInfo();
-
-	void setAgentPos(sf::Vector2i pos);
-
-	E_action getSequence();
+	/* Decrease, getting and reset steps number methods*/
+	int GetSteps();
+	void DecreaseSteps();
+	void ResetSteps();
 
 private:
 	static const int    MAX_SIZE = 10;
@@ -92,20 +91,16 @@ private:
 
 	int    GRID_SIZE;
 	int    iterations;
+	int    stepsLeft;
+	int    tempSteps;
 
 	Tile GRID[10][10];
 
 	std::vector<std::unique_ptr<Object>> _objects;
 	std::vector<Tile*> mg_exits, mg_obstacles;
 	Agent* _agent;
-	E_action path;
 
 	sf::Texture empty;
-	sf::Texture	obstacle;
-	sf::Texture exit;
-	sf::Clock timer;
-	float gain = 0;
-	bool run = false;
 
 
 	/* Input depednet methods 
@@ -117,18 +112,20 @@ private:
 	void decSize(sf::Clock* timer);
 	void resetAgent(sf::Clock* timer);
 
+	/*resret grid*/
 	void reset();
+
+	/*reset highlight of tile that is not pointed*/
 	void ResetColor();
 	
-
+	/*initialize grid*/
 	void initTiles();
-
+	
+	/*generate obstracles, exits and agent positions*/
 	void generateObstacles();
-
-	void setStartTile(sf::Vector2i pos);
-
 	void generateExits();
 	void generateAgentTile();
 
+	/*spawn objects with polimorphism usage*/
 	void SpawnObjects();
 };

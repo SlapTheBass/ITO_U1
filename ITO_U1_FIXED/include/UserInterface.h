@@ -3,6 +3,7 @@
 #include "PCH.h"
 #include "Level.h"
 #include "Agent.h"
+#include "Algorithm.h"
 
 class UserInterface
 {
@@ -23,7 +24,7 @@ public:
 
 private:
 	int level_size = 0;
-	int player_moves = 0;
+	int agent_moves = 0;
 	int obstacles_number = 0;
 	int column_index = 0;
 	int row_index = 0;

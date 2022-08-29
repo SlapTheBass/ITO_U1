@@ -66,16 +66,21 @@ void Level::Update(Input& input, sf::Clock* timer)
 	if (input.pressedKey() == eINC_SIZE) //SHIFT detected
 	{
 		incSize(timer);
+		stepsLeft = ((rand() % 2) + 1) * GRID_SIZE;
+		tempSteps = stepsLeft;
 		timer->restart();
 	}
 	else if (input.pressedKey() == eDEC_SIZE)  //CTRL detected
 	{
 		decSize(timer);
+		stepsLeft = ((rand() % 2) + 1) * GRID_SIZE;
+		tempSteps = stepsLeft;
 		timer->restart();
 	}
 	else if (input.pressedKey() == eRESET)  //R detected
 	{
 		resetAgent(timer);
+		stepsLeft = tempSteps;
 		timer->restart();
 	}
 }
@@ -111,6 +116,9 @@ void Level::initTiles()
 	generateAgentTile();
 
 	SpawnObjects();
+
+	stepsLeft = (rand() % 2 + 1) * GRID_SIZE;
+	tempSteps = stepsLeft;
 }
 
 void Level::reset()
@@ -446,6 +454,8 @@ Tile* Level::GetAgentTile()
 			if (tile->type == eAGENT)
 			{
 				Agent = tile;
+				Agent->columnIndex = i;
+				Agent->rowIndex = j;
 			}
 		}
 	}
@@ -472,4 +482,17 @@ void Level::SpawnAgent()
 			}
 		}
 	}
+}
+
+int Level::GetSteps()
+{
+	return stepsLeft;
+}
+
+void Level::DecreaseSteps()
+{
+	stepsLeft--;
+
+	if (stepsLeft <= 0)
+		stepsLeft = 0;
 }

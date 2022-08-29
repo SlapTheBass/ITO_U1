@@ -22,6 +22,12 @@ UserInterface::UserInterface()
 	obstacles.setFillColor(sf::Color::Yellow);
 	obstacles.setCharacterSize(10);
 
+	moves.setFont(font);
+	moves.setString("AGENT - steps left: " + std::to_string(agent_moves));
+	moves.setPosition(sf::Vector2f(750, 275));
+	moves.setFillColor(sf::Color::Cyan);
+	moves.setCharacterSize(10);
+
 	info.setFont(font);
 	info.setString("================= TILE INFO ================\n\ncolumn index: " + std::to_string(column_index) + "\trow index: " + std::to_string(row_index)
 		+ "\n\naverage reward: " + std::to_string(average_reward) + "\n\ndiscount: " + std::to_string(discount));
@@ -49,6 +55,7 @@ void UserInterface::Draw(sf::RenderWindow* window)
 	window->draw(obstacles);
 	window->draw(info);
 	window->draw(type);
+	window->draw(moves);
 }
 
 void UserInterface::Update(Level* level)
@@ -60,6 +67,9 @@ void UserInterface::Update(Level* level)
 
 	obstacles_number = level->getObstaclesNumber();
 	obstacles.setString("Number of obstacles: " + std::to_string(obstacles_number));
+
+	agent_moves = level->GetSteps();
+	moves.setString("AGENT - steps left: " + std::to_string(agent_moves));
 
 	/*call method to get tile information
 	  additional effect is changing color of tile to darker
