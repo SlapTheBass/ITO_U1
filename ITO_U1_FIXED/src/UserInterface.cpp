@@ -43,6 +43,7 @@ UserInterface::~UserInterface()
 
 void UserInterface::Draw(sf::RenderWindow* window)
 {
+	/*draw every single text object on the screen*/
 	window->draw(keys);
 	window->draw(size);
 	window->draw(obstacles);
@@ -52,7 +53,7 @@ void UserInterface::Draw(sf::RenderWindow* window)
 
 void UserInterface::Update(Level* level)
 {
-	sf::Vector2i position = sf::Mouse::getPosition();
+	sf::Vector2i position = sf::Mouse::getPosition(); //save mouse position into variable
 
 	level_size = level->getLevelSize();
 	size.setString("Level size:  " + std::to_string(level_size) + " x " + std::to_string(level_size));
@@ -60,11 +61,16 @@ void UserInterface::Update(Level* level)
 	obstacles_number = level->getObstaclesNumber();
 	obstacles.setString("Number of obstacles: " + std::to_string(obstacles_number));
 
+	/*call method to get tile information
+	  additional effect is changing color of tile to darker
+	*/
 	column_index = level->GetTile(position)->columnIndex;
 	row_index = level->GetTile(position)->rowIndex;
 	average_reward = level->GetTile(position)->reward;
 	discount = 0.9;
 
+
+	/*display tile information*/
 	if (column_index >= level->getLevelSize())
 	{
 		info.setString("================= TILE INFO ================\n\ncolumn index: \t\trow index:\n\naverage reward: " + std::to_string(average_reward) +

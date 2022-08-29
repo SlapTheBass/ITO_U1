@@ -2,7 +2,7 @@
 
 App::App()
 {
-	Init();
+	Init();  //initialize app on its' creation
 }
 
 App::~App()
@@ -12,20 +12,19 @@ App::~App()
 
 void App::Init()
 {
-	_window = new sf::RenderWindow(sf::VideoMode(1024, 600), "RL Project"); 
+	_window = new sf::RenderWindow(sf::VideoMode(1024, 600), "RL Project");  //create main window
 	_window->setKeyRepeatEnabled(true);
 
-	_level = new Level();
-	_UI = new UserInterface();
-	_algorithm = new Algorithm();
+	_level = new Level(); //create level
+	_UI = new UserInterface(); //create ui
+	_algorithm = new Algorithm(); //create algorithm
 }
 
 void App::Update()
 {
-	_algorithm->calculateRewards(_level);
-	_level->Update(_input, &_timer);
+	_level->Update(_input, &_timer); 
 
-	if (_input.pressedKey() == eSPACE)
+	if (_input.pressedKey() == eSPACE) //if space is pressed algorithm calculates new position of agent
 	{
 		if (_timer.getElapsedTime().asMilliseconds() >= 50)
 		{

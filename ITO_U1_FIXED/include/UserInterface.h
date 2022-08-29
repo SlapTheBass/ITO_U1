@@ -7,10 +7,18 @@
 class UserInterface
 {
 public:
+	/*default constructor*/
 	UserInterface();
+	/*default destructor*/
 	~UserInterface();
 
+	/*update method
+	  it takes values from level
+	  and allows to display them 
+	  as members of user interface
+	*/
 	void Update(Level* level);
+	/*ui draw method*/
 	void Draw(sf::RenderWindow* window);
 
 private:

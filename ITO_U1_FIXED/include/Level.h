@@ -96,6 +96,7 @@ private:
 	Tile GRID[10][10];
 
 	std::vector<std::unique_ptr<Object>> _objects;
+	std::vector<Tile*> mg_exits, mg_obstacles;
 	Agent* _agent;
 	E_action path;
 

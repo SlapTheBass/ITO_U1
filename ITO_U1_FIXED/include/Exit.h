@@ -7,6 +7,9 @@
 class Exit : public Object
 {
 public:
+	/* parametrized constructor
+	   it creates exit in given position
+	*/
 	Exit(sf::Vector2f position);
 	~Exit();
 

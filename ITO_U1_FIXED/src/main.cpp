@@ -2,7 +2,7 @@
 
 int main()
 {
-	srand(static_cast<int>(time(nullptr)));
+	srand(static_cast<int>(time(nullptr)));  //random seed depends on processor time
 
 	App* application = new App();
 

@@ -3,12 +3,13 @@
 #include <PCH.h>
 #include "Utils.h"
 
-class Object
+/*base  class for  exit and  obstacle
+* it  allows to  easier  generating objects
+* using polimorphism
+*/
+class Object 
 {
 public:
-	sf::Vector2i GetPosition();
-	void SetPosition(int x, int y);
-
 	void Draw(sf::RenderWindow* window);
 
 	E_objectType GetType() const;

@@ -10,7 +10,7 @@ Input::~Input()
 
 }
 
-E_keys Input::pressedKey()
+E_keys Input::pressedKey() //map pressed keys int enumerator codes
 {
 
 	if (_keyboard.isKeyPressed(sf::Keyboard::LShift) || _keyboard.isKeyPressed(sf::Keyboard::RShift))

@@ -1,5 +1,7 @@
 #pragma once
 
+/*set of helpful enumerators*/
+
 typedef enum E_action { eNORTH, eSOUTH, eEAST, eWEST };
 
 typedef enum E_tileType { eEMPTY, eAGENT, eOBSTACLE, eEXIT, eVOID };
