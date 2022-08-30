@@ -44,7 +44,7 @@ void App::Update()
 		}
 		_timer.restart();
 	}
-	_UI->Update(_level);
+	_UI->Update(_level,_algorithm);
 }
 
 void App::Run()

@@ -18,7 +18,7 @@ public:
 	  and allows to display them 
 	  as members of user interface
 	*/
-	void Update(Level* level);
+	void Update(Level* level,  Algorithm* algo);
 	/*ui draw method*/
 	void Draw(sf::RenderWindow* window);
 
@@ -32,6 +32,6 @@ private:
 	float discount = 0;
 	std::string TYPE;
 
-	sf::Text size, moves, obstacles, keys, info, type;
+	sf::Text size, moves, obstacles, keys, info, type, warning;
 	sf::Font font;
 };

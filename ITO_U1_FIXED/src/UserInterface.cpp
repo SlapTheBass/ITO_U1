@@ -37,9 +37,14 @@ UserInterface::UserInterface()
 
 	type.setFont(font);
 	type.setString("TILE TYPE:  ");
-	type.setPosition(sf::Vector2f(750, 500));
+	type.setPosition(sf::Vector2f(750, 450));
 	type.setFillColor(sf::Color::Magenta);
 	type.setCharacterSize(10);
+
+	warning.setFont(font);
+	warning.setPosition(sf::Vector2f(750, 500));
+	warning.setFillColor(sf::Color::Red);
+	warning.setCharacterSize(10);
 }
 
 UserInterface::~UserInterface()
@@ -56,9 +61,10 @@ void UserInterface::Draw(sf::RenderWindow* window)
 	window->draw(info);
 	window->draw(type);
 	window->draw(moves);
+	window->draw(warning);
 }
 
-void UserInterface::Update(Level* level)
+void UserInterface::Update(Level* level, Algorithm* algo)
 {
 	sf::Vector2i position = sf::Mouse::getPosition(); //save mouse position into variable
 
@@ -79,6 +85,21 @@ void UserInterface::Update(Level* level)
 	average_reward = level->GetTile(position)->reward;
 	discount = 0.9;
 
+	if (algo->CanMove() == false)
+	{
+		if (level->GetSteps() == 0)
+		{
+			warning.setString("AGENT can't move!\nNo steps left!\n\nPress [R] to reset agent");
+		}
+		else if (algo->ExitFound())
+		{
+			warning.setString("AGENT can't move!\nExit has been found!\n\nPress [R] to reset agent");
+		}
+	}
+	else
+	{
+		warning.setString(" ");
+	}
 
 	/*display tile information*/
 	if (column_index >= level->getLevelSize())
